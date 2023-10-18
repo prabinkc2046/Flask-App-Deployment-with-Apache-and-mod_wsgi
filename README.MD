@@ -1,7 +1,7 @@
 # Flask App Deployment with Apache and mod_wsgi
 This guide demonstrates how to deploy a simple Flask application using Apache as the front-end web server and mod_wsgi as the bridge between Apache and the Flask application. This setup allows Apache to handle incoming requests, recognize URLs, and forward them to the Flask application.
 
-#Video Link: [Flask app deployment with Apache adn mod_wsgi](https://youtu.be/nTkgBwa1gLw)
+# Video Link: [Flask app deployment with Apache adn mod_wsgi](https://youtu.be/nTkgBwa1gLw)
 
 # Prerequisites
 1. Ubuntu operating system
