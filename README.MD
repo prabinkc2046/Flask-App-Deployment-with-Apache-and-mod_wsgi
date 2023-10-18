@@ -1,6 +1,8 @@
 # Flask App Deployment with Apache and mod_wsgi
 This guide demonstrates how to deploy a simple Flask application using Apache as the front-end web server and mod_wsgi as the bridge between Apache and the Flask application. This setup allows Apache to handle incoming requests, recognize URLs, and forward them to the Flask application.
 
+#Video Link: [Flask app deployment with Apache adn mod_wsgi](https://youtu.be/nTkgBwa1gLw)
+
 # Prerequisites
 1. Ubuntu operating system
 2. sudo access
@@ -24,25 +26,9 @@ sudo apt install python3 python3-pip python3-venv -y
 ## Create a Project Directory:
 
 ```bash
-sudo mkdir /var/www/hello-world
-sudo chown -R $USER:$USER /var/www/hello-world
-cd /var/www/hello-world
-```
-
-## Create a Simple Flask Application:
-Save the following code as app.py:
-
-```python
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return "Hello, world!"
-
-if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5000)
+sudo mkdir /var/www/demo
+sudo chown -R $USER:$USER /var/www/demo
+cd /var/www/demo
 ```
 
 ## Create a Virtual Environment and Run the Flask App:
@@ -66,15 +52,15 @@ sudo apt install apache2 libapache2-mod-wsgi-py3
 ## Create a WSGI Script:
 
 ```bash
-sudo nano /var/www/hello-world/hello-world.wsgi
+sudo nano /var/www/demo/demo.wsgi
 ```
 ## Add the following content:
 
 ```python
 import sys
 
-sys.path.insert(0, '/var/www/hello-world')
-sys.path.insert(0, '/var/www/hello-world/venv/lib/python3.10/site-packages/')
+sys.path.insert(0, '/var/www/demo')
+sys.path.insert(0, '/var/www/demo/venv/lib/python3.10/site-packages/')
 
 from app import app as application
 ```
@@ -83,7 +69,7 @@ Save the file.
 ## Configure Apache Virtual Host:
 
 ```bash
-sudo nano /etc/apache2/sites-available/hello-world.conf
+sudo nano /etc/apache2/sites-available/demo.conf
 ```
 
 Add the following content:
@@ -92,17 +78,16 @@ Add the following content:
 <VirtualHost *:80>
     ServerName  <serverIP or domain name>
     ServerAdmin webmaster@localhost
-    WSGIDaemonProcess hello-world threads=5
-    WSGIScriptAlias / /var/www/hello-world/hello-world.wsgi
-    <Directory hello-world>
-         WSGIProcessGroup hello-world
+    WSGIDaemonProcess demo threads=5
+    WSGIScriptAlias / /var/www/demo/demo.wsgi
+    <Directory demo>
+         WSGIProcessGroup demo
          WSGIApplicationGroup %{GLOBAL}
-         Order deny,allow
-         Allow from all
+	 Require all granted
     </Directory>
 
-    ErrorLog ${APACHE_LOG_DIR}/hello-world-error.log
-    CustomLog ${APACHE_LOG_DIR}/hello-world-access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/demo-error.log
+    CustomLog ${APACHE_LOG_DIR}/demo-access.log combined
 </VirtualHost>
 ```
 Save the file.
@@ -110,7 +95,7 @@ Save the file.
 Enable the Configuration:
 
 ```bash
-sudo a2ensite hello-world.conf
+sudo a2ensite demo.conf
 ```
 Restart Apache:
 
